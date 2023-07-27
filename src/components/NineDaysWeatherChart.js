@@ -87,30 +87,13 @@ function getWeatherValues(list, key){
 }
 
 
-export default function NineDaysWeatherChart() {
+export default function NineDaysWeatherChart({data}) {
 
-    const data = useRef(null);
 
-    const tempOptions = useRef(null)
-    const tempSeries = useRef(null)
-
-    const humidityOptions = useRef(null)
-    const humiditySeries = useRef(null)
-
-    useEffect(()=>{
-        axios.get('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=en')
-        .then(response => {
-            data.current = response.data
-            tempOptions.current = getWeatherValues(data.current.weatherForecast,"forecastDate")
-            tempSeries.current = getWeatherValues(data.current.weatherForecast,"temp")
-            humidityOptions.current = getWeatherValues(data.current.weatherForecast,"forecastDateHumidity")
-            humiditySeries.current = getWeatherValues(data.current.weatherForecast,"humidity")
-        })
-        .catch(error => {
-            console.log(error);
-        });
-    }, [])
-
+    const [tempOptions,setTempOptions]= useState(getWeatherValues(data.weatherForecast,"forecastDate"))
+    const [humidityOptions,setHumidityOptions] = useState(getWeatherValues(data.weatherForecast,"forecastDateHumidity"))
+    const [tempSeries,setTempSeries] = useState(getWeatherValues(data.weatherForecast,"temp"))
+    const [humiditySeries,setHumiditySeries] = useState(getWeatherValues(data.weatherForecast,"humidity"))
   return (
     <div className='row'>
     <div className='col-lg-12'>
@@ -119,10 +102,10 @@ export default function NineDaysWeatherChart() {
             <div className='card'>
                 <div className='card-body'>
                     {
-                        tempOptions.current && tempSeries.current &&
+                        tempOptions && tempSeries &&
                         <Chart 
-                            options={tempOptions.current} 
-                            series={tempSeries.current} 
+                            options={tempOptions} 
+                            series={tempSeries} 
                             type="line" 
                             height={350} 
                         />
@@ -135,10 +118,10 @@ export default function NineDaysWeatherChart() {
             <div className='card'>
                 <div className='card-body'>
                     {
-                        humidityOptions.current && humiditySeries.current &&
+                        humidityOptions && humiditySeries &&
                         <Chart 
-                            options={humidityOptions.current} 
-                            series={humiditySeries.current} 
+                            options={humidityOptions} 
+                            series={humiditySeries} 
                             type="line" 
                             height={350} 
                         />

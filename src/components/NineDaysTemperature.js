@@ -3,26 +3,10 @@ import axios from 'axios';
 import { AiFillCloud } from "react-icons/ai";
 
 
-export default function NineDaysWeather() {
-
-    const data = useRef(null);
-    const [weatherForecast, setWeatherForcast] = useState(null)
-    const [seaTemp, setSeaTemp] = useState(null)
-    const [soilTemp, setSoilTemp] = useState(null)
-
-    useEffect(()=>{
-        axios.get('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=en')
-        .then(response => {
-            data.current = response.data
-            setWeatherForcast(data.current.weatherForecast)
-            setSeaTemp(data.current.seaTemp)
-            setSoilTemp(data.current.soilTemp)
-        })
-        .catch(error => {
-            console.log(error);
-        });
-    }, [])
-
+export default function NineDaysTemperature({data}) {
+    const [weatherForecast, setWeatherForcast] = useState(data.weatherForecast)
+    const [seaTemp, setSeaTemp] = useState(data.seaTemp)
+    const [soilTemp, setSoilTemp] = useState(data.soilTemp)
   return (
     <div className='row'>
     <div className='col-lg-12'>
@@ -33,11 +17,11 @@ export default function NineDaysWeather() {
                     weatherForecast.slice(0,1).map(item => (
                         <div key={item.forecastDate} className="col-lg-12 col-md-6 h-100" >
                             <div className="card">
-                            <h6 className="card-header text-center text-sm">
+                            <p className="card-header text-center text-sm h6">
                                 {new Date(`${item.forecastDate.slice(0,4)}-${item.forecastDate.slice(4,6)}-${item.forecastDate.slice(6,8)}`).toLocaleDateString('en-CA',{ month: 'short', day: 'numeric' })}
                                 <br></br>
                                 ({item.week.slice(0,3)})
-                            </h6>
+                            </p>
                             <div className="card-body d-flex align-items-center flex-column">
                                 <div className="card-icon d-flex align-items-center justify-content-center">
                                 <AiFillCloud />

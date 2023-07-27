@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'remixicon/fonts/remixicon.css'
 import 'react-quill/dist/quill.snow.css';
 import { Inter } from 'next/font/google'
+import React from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
