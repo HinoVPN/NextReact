@@ -24,6 +24,7 @@ export default function NineDaysWeather() {
     }, [])
 
   return (
+    <div className='row'>
     <div className='col-lg-12'>
         <div className='row'>
           <div className='col-lg-3'>
@@ -33,7 +34,7 @@ export default function NineDaysWeather() {
                         <div key={item.forecastDate} className="col-lg-12 col-md-6 h-100" >
                             <div className="card">
                             <h6 className="card-header text-center text-sm">
-                                {new Date(`${item.forecastDate.slice(0,4)}-${item.forecastDate.slice(4,6)}-${item.forecastDate.slice(6,8)}`).toLocaleDateString('en-CA',{ month: 'long', day: 'numeric' })}
+                                {new Date(`${item.forecastDate.slice(0,4)}-${item.forecastDate.slice(4,6)}-${item.forecastDate.slice(6,8)}`).toLocaleDateString('en-CA',{ month: 'short', day: 'numeric' })}
                                 <br></br>
                                 ({item.week.slice(0,3)})
                             </h6>
@@ -109,6 +110,7 @@ export default function NineDaysWeather() {
             
           </div>
         </div>
+      </div>
       </div>
   )
 }
