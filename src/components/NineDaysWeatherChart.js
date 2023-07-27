@@ -4,31 +4,51 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 
 function getWeatherValues(list, key){
-    if(key == "forecastDate"){
-        let resultList = []
+    let resultList = []
+    let maxList = []
+    let minList = []
+    if(key == 'forecastDate'){
         list.forEach(day => {
-            let date = day[key]
+            let date = day.forecastDate
             let convertedDate = new Date(`${date.slice(0,4)}-${date.slice(4,6)}-${date.slice(6,8)}`).toLocaleDateString('en-CA',{ month: 'short', day: 'numeric' })
             resultList.push(convertedDate) 
         });
 
         return {
+            title:{
+                text: 'Nine Days Temperature',
+            },
             chart: {
-            id: 'Nine Days Weather'
+                id: 'Nine Days Weather'
             },
             xaxis: {
-            categories: resultList
-            }
+                categories: resultList
+            },
+            // colors: ['#546E7A', '#E91E63']
+        }
+    }else if(key == "forecastDateHumidity"){
+        list.forEach(day => {
+            let date = day.forecastDate
+            let convertedDate = new Date(`${date.slice(0,4)}-${date.slice(4,6)}-${date.slice(6,8)}`).toLocaleDateString('en-CA',{ month: 'short', day: 'numeric' })
+            resultList.push(convertedDate) 
+        });
+
+        return {
+            title:{
+                text: 'Nine Days Humidity',
+            },
+            chart: {
+                id: 'Nine Days Weather'
+            },
+            xaxis: {
+                categories: resultList
+            },
+            // colors: ['#546E7A', '#E91E63']
         }
     }else if(key == 'temp'){
-    
-        let maxList = []
-        let minList = []
-
         list.forEach(day => {
             let max = day.forecastMaxtemp.value
             let min = day.forecastMintemp.value
-            console.log(max,min)
             maxList.push(parseFloat(max)) 
             minList.push(parseFloat(min))
         });
@@ -43,6 +63,24 @@ function getWeatherValues(list, key){
                 data: minList
             }
         ]
+    }else if(key == 'humidity'){
+        list.forEach(day => {
+            let max = day.forecastMaxrh.value
+            let min = day.forecastMinrh.value
+            maxList.push(parseFloat(max)) 
+            minList.push(parseFloat(min))
+        });
+
+        return [
+            {
+                name: 'Max Humidity',
+                data: maxList
+            },
+            {
+                name: 'Min Humidity',
+                data: minList
+            }
+        ]
     }
     
     return    
@@ -52,47 +90,62 @@ function getWeatherValues(list, key){
 export default function NineDaysWeatherChart() {
 
     const data = useRef(null);
-    const [weatherForecast, setWeatherForcast] = useState(null)
 
-    const options = useRef(null)
+    const tempOptions = useRef(null)
+    const tempSeries = useRef(null)
 
-    const series = useRef(null)
+    const humidityOptions = useRef(null)
+    const humiditySeries = useRef(null)
 
     useEffect(()=>{
         axios.get('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=en')
         .then(response => {
             data.current = response.data
-            options.current = getWeatherValues(data.current.weatherForecast,"forecastDate")
-            series.current = getWeatherValues(data.current.weatherForecast,"temp")
-            setWeatherForcast(data.current.weatherForecast)
-            console.log(series)
-
+            tempOptions.current = getWeatherValues(data.current.weatherForecast,"forecastDate")
+            tempSeries.current = getWeatherValues(data.current.weatherForecast,"temp")
+            humidityOptions.current = getWeatherValues(data.current.weatherForecast,"forecastDateHumidity")
+            humiditySeries.current = getWeatherValues(data.current.weatherForecast,"humidity")
         })
         .catch(error => {
             console.log(error);
         });
     }, [])
+
   return (
     <div className='row'>
     <div className='col-lg-12'>
     <div className='row'>
-
-        <div className='col-lg-12'>
-
+        <div className='col-lg-6'>
             <div className='card'>
-                <div className='card-header'>Chart</div>
                 <div className='card-body'>
-                    <Chart 
-                        options={options.current} 
-                        series={series.current} 
-                        type="line" 
-                        height={350} 
-                    />
+                    {
+                        tempOptions.current && tempSeries.current &&
+                        <Chart 
+                            options={tempOptions.current} 
+                            series={tempSeries.current} 
+                            type="line" 
+                            height={350} 
+                        />
+                    }
                 </div>
             </div>
-
         </div>
 
+        <div className='col-lg-6'>
+            <div className='card'>
+                <div className='card-body'>
+                    {
+                        humidityOptions.current && humiditySeries.current &&
+                        <Chart 
+                            options={humidityOptions.current} 
+                            series={humiditySeries.current} 
+                            type="line" 
+                            height={350} 
+                        />
+                    }
+                </div>
+            </div>
+        </div>
     </div>
     </div>
     </div>

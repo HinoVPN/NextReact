@@ -69,8 +69,8 @@ export default function NineDaysWeather() {
                             <span className='font-weight-bold'>Soil temperatures</span>
                             {soilTemp &&
                                 soilTemp.map(item => (
-                                    <div key={item} className='d-flex align-items-center justify-content-center flex-column'>
-                                        <h7>{item.depth.value}m : {item.value} °{item.unit}</h7>
+                                    <div key={item.value} className='d-flex align-items-center justify-content-center flex-column'>
+                                        <span>{item.depth.value}m : {item.value} °{item.unit}</span>
                                     </div>
                                 ))
                             }
