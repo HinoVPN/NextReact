@@ -1,3 +1,4 @@
+'use client'
 import 'bootstrap/dist/css/bootstrap.css'
 import React, { useEffect, useRef, useState } from 'react'
 import NineDaysWeatherChart from './NineDaysWeatherChart'

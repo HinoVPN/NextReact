@@ -17,20 +17,19 @@ export default function SideBar({changeToggled,toggled}) {
       left: '0',
       bottom: '0',
       zIndex: '996',
-      transition: 'all 0.3s',
       // padding: '20px',
       overflowY: 'auto',
       scrollbarWidth: 'thin',
       scrollbarColor: '#aab7cf transparent',
-      boxShadow: '0px 0px 20px rgb(1 41 112 / 10%)',
-      backgroundColor: '#fff',
+      // boxShadow: '0px 0px 20px rgb(1 41 112 / 10%)',
+      background: '#fff',
     }}
     >
     <Menu
       transitionDuration={1000}
       menuItemStyles={{
         root:{
-          backgroundColor: 'white'
+          background: 'white'
         },
         button: {
             backgroundColor: '#FbFbFb',

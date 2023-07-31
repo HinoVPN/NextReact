@@ -6,6 +6,7 @@ import 'remixicon/fonts/remixicon.css'
 import 'react-quill/dist/quill.snow.css';
 import { Inter } from 'next/font/google'
 import React from 'react'
+import Header from 'components/Header'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,7 +22,10 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"></link>
         <script src="https://cdn.tailwindcss.com"></script>
       </Head>
-      <body>{children}</body>
+      <body>
+        <Header/>
+        {children}
+      </body>
     </html>
   )
 }
