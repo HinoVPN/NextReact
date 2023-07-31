@@ -53,7 +53,8 @@ export default function ToDoFormBlock() {
               toDoList.map((item) =>{
                   return(
                     <Card key={item.id}>
-                      <Card.Body>Task: {item.taskName}</Card.Body>
+                      <Card.Header>Deadline: {item.deadline}</Card.Header>
+                      <Card.Body>{item.taskName}</Card.Body>
                     </Card>
                   )
               })
