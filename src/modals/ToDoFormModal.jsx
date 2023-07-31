@@ -1,12 +1,38 @@
+import { addDoc, collection } from 'firebase/firestore';
 import React, { useEffect } from 'react'
 import {Modal,Button, FloatingLabel, Form} from 'react-bootstrap';
 import { useForm } from "react-hook-form"
+import db from '../../firebase';
+
+
+export async function getStaticProps(){
+  const content = 'Hello World';
+  console.log('call getStaticProps');
+
+  return {
+      props: {
+          content
+      }
+  };
+};
+
 
 const ToDoFormModal = ({show,handleClose,returnData}) => {
   const { register, handleSubmit, reset } = useForm()
-  const onSubmit = (data) => {
-    returnData(data)
-    handleClose()
+  const onSubmit = async (data) => {
+    try {
+      const docRef = await addDoc(collection(db, "ToDoLists"), {
+        taskName: data.taskName,
+        deadline: data.deadline,
+        taskDetail: data.taskDetail,
+        status: 0
+      });
+      returnData(docRef)
+      handleClose()
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+    
   }
 
   useEffect(() => {

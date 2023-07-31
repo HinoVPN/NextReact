@@ -1,21 +1,35 @@
 'use client'
 import 'bootstrap/dist/css/bootstrap.css'
-import React, { useEffect, useState } from 'react'
-import { AiOutlineMenu } from 'react-icons/ai'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Card } from 'react-bootstrap'
-import Modal from 'modals/Modal'
 import ToDoFormModal from 'modals/ToDoFormModal'
+import { collection, doc, getDocs, onSnapshot } from 'firebase/firestore'
+import db from '../../firebase'
+
 
 export default function ToDoFormBlock() {
   const [show, setShow] = useState(false);
   const [newTask, setNewTask] = useState(null)
-  const [toDoList, setToDoList] = useState([])
+  const [toDoList, setToDoList] = useState(null)
   useEffect(()=>{
     if(newTask){
       setToDoList([newTask,...toDoList])
       setNewTask(null)
     }
   },[newTask])
+
+  useEffect(() => {
+    async function fetchMyAPI(){
+      const querySnapshot = await getDocs(collection(db, "ToDoLists"));
+      let tempArr = []
+      querySnapshot.forEach(doc => {
+        tempArr.push({ ...doc.data(), id: doc.id }) 
+      });
+      setToDoList(tempArr)
+    }
+
+    fetchMyAPI()
+  }, [])
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -35,11 +49,11 @@ export default function ToDoFormBlock() {
       </div>
       <div className='row'>
         <div className='col'>
-          {toDoList.length > 0 &&
+          {toDoList &&
               toDoList.map((item) =>{
                   return(
-                    <Card key={item.taskName}>
-                      <Card.Body>{item.taskName}</Card.Body>
+                    <Card key={item.id}>
+                      <Card.Body>Task: {item.taskName}</Card.Body>
                     </Card>
                   )
               })
