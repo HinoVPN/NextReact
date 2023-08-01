@@ -1,13 +1,16 @@
 import React from 'react'
-import {Modal,Button} from 'react-bootstrap';
-
-const ModalBlock = ({show,handleClose}) => {
+import {Modal,Button, Badge} from 'react-bootstrap';
+import { format } from 'date-fns'
+const ToDoTaskModal = ({show,handleClose,task}) => {
   return (
     <Modal backdrop="static" show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>{task.taskName}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Body>
+          <h6>Deadline: {format(new Date(task.deadline), 'MM/dd/yyyy hh:mm:ss a')}</h6>
+          <span>{task.taskDetail}</span>
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
@@ -20,4 +23,4 @@ const ModalBlock = ({show,handleClose}) => {
   )
 }
 
-export default ModalBlock
+export default ToDoTaskModal

@@ -5,18 +5,6 @@ import { useForm } from "react-hook-form"
 import db from '../../firebase';
 
 
-export async function getStaticProps(){
-  const content = 'Hello World';
-  console.log('call getStaticProps');
-
-  return {
-      props: {
-          content
-      }
-  };
-};
-
-
 const ToDoFormModal = ({show,handleClose,returnData}) => {
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
@@ -45,7 +33,7 @@ const ToDoFormModal = ({show,handleClose,returnData}) => {
 
   return (
     <Form>
-    <Modal show={show} onHide={handleClose}>
+    <Modal backdrop="static" show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Create Task</Modal.Title>
         </Modal.Header>
