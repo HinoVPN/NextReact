@@ -20,7 +20,6 @@ const ToDoFormModal = ({show,handleClose,returnData}) => {
     } catch (e) {
       console.error("Error adding document: ", e);
     }
-    
   }
 
   useEffect(() => {
