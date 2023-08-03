@@ -1,9 +1,13 @@
 import React from 'react'
 import {Modal,Button, Badge} from 'react-bootstrap';
 import { format } from 'date-fns'
+import { doc, updateDoc } from 'firebase/firestore';
+import db from '../../firebase';
 const ToDoTaskModal = ({show,handleClose,task}) => {
   const onFinish = async (data) => {
     try {
+      const docRef = doc(db, 'ToDoLists', task.id);
+      updateDoc(docRef, { status: 1 });
       handleClose()
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -26,7 +30,7 @@ const ToDoTaskModal = ({show,handleClose,task}) => {
           Close
         </Button>
         <Button variant="primary" onClick={()=>onFinish()}>
-          Save Changes
+          Finish
         </Button>
       </Modal.Footer>
       </>

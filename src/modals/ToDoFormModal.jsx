@@ -5,17 +5,17 @@ import { useForm } from "react-hook-form"
 import db from '../../firebase';
 
 
-const ToDoFormModal = ({show,handleClose,returnData}) => {
+const ToDoFormModal = ({show,handleClose}) => {
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
     try {
-      const docRef = await addDoc(collection(db, "ToDoLists"), {
+      const newTask = {
         taskName: data.taskName,
         deadline: data.deadline,
         taskDetail: data.taskDetail,
         status: 0
-      });
-      returnData(docRef)
+      }
+      const docRef = await addDoc(collection(db, "ToDoLists"), newTask);
       handleClose()
     } catch (e) {
       console.error("Error adding document: ", e);
