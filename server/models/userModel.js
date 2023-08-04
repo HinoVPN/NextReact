@@ -5,7 +5,7 @@ const userSchema = new Schema({
     password:{ type: String, required: true},
     createdDate:{ type: Date, default: Date.now},
     lastUpdatedDate:{ type: Date, default: Date.now},
-    status:{ type: String, default: 1, enum:[0,1,8]}
+    status:{ type: String, default: 1, enum:[0,1,8]},
 })
 
 userSchema.pre('find',function(next){
