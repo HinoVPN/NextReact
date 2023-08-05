@@ -7,6 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 import { Inter } from 'next/font/google'
 import React from 'react'
 import Header from 'components/Header'
+import { AuthProvider } from 'context/AuthProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,6 +18,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <AuthProvider>
     <html lang="en">
       <Head>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"></link>
@@ -27,5 +29,6 @@ export default function RootLayout({ children }) {
         {children}
       </body>
     </html>
+    </AuthProvider>
   )
 }

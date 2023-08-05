@@ -1,3 +1,4 @@
+const cors = require('cors');
 var express = require('express');
 var router = express.Router();
 const UserController = new (require('../controllers/userController'))()
@@ -15,7 +16,7 @@ router.post('/register', async function(req, res, next) {
 
 router.post('/login', async function(req, res, next) {
   const result = await UserController.loginUser(req, res)
-  res.json(result)
+  res.status(result.status).json(result.data)
 });
 
 router.post('/profile', async function(req, res, next) {

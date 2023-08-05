@@ -1,40 +1,36 @@
 #!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
-// Load environment variables
 var dotenv = require('dotenv');
 dotenv.config();
 
-var app = require('../app');
-var debug = require('debug')('server:server');
-var http = require('http');
 
+
+//connect mongodb
 const mongoose = require('mongoose');
 const connectionString = process.env.ATLAS_URI;
-
-/**
- * Get port from environment and store in Express.
- */
-
-var port = normalizePort(process.env.PORT || '3030');
-app.set('port', port);
-
-/**
- * Create HTTP server.
- */
-var server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
 mongoose.connect(connectionString)
 const db = mongoose.connection
 // db.on("error", (e)=>console.error(e))
 db.once("open", ()=>console.log("Connected to Database"))
 
-app.listen(port);
+/**
+ * Module dependencies.
+ */
+// Load environment variables
+var app = require('../app');
+var debug = require('debug')('server:server');
+
+/**
+ * Get port from environment and store in Express.
+ */
+var port = normalizePort(process.env.PORT || '3030');
+// app.set('port', port);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+app.listen(port, function(){
+  console.log('Server running on port ' + port);
+});
 app.on('error', onError);
 app.on('listening', onListening);
 

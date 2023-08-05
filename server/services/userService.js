@@ -51,13 +51,15 @@ class UserService {
             //find user by username
             const user = await User.findOne({username: req.body.username}).exec()
             if(!user){
-                return {message: "User not found"}
+                //error message
+                return {status: 401, data:{message: "Unauthorized"}}
             }
             
             //compare password
             const isMatch = this.comparePassword(req.body.password, user.password)
             if(!isMatch){
-                return {message: "Incorrect password"}
+                //error message
+                return {status: 401, data:{message: "Unauthorized"}}
             }
 
             let userInfo = {
@@ -73,21 +75,20 @@ class UserService {
             })
             await token.save()
 
-            return {
+            return {status: 200, data:{
                 _id: user._id,
                 username: user.username,
                 accessToken: accessToken,
-            }
-
+            }}
             
         }catch(e){
-            return {message: e.message}
+            return {status: 500, data:{message: e.message}}
         }
     }
 
     async getUserProfile(req, res) {
-        const token = await this.auth.checkJwt(req.headers.authorization.split(' ')[1])
-        if(token){
+        const token = await this.auth.checkJwt(req.headers.authorization?.split(' ')[1])
+        if(!token){
             return {message: "Token Expired"}
         }
         
