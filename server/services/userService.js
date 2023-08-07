@@ -69,6 +69,7 @@ class UserService {
                     _id: user._id,
                     username: user.username,
                     accessToken: currentToken.accessToken,
+                    role: user.role
                 }}
             }
 
@@ -89,6 +90,7 @@ class UserService {
                 _id: user._id,
                 username: user.username,
                 accessToken: accessToken,
+                role: user.role
             }}
             
         }catch(e){
@@ -103,7 +105,6 @@ class UserService {
         if(!user){
           return {status: 401, data:{message: "User not found"}}
         }
-
         const token = await this.auth.checkJwt(req.headers.authorization?.split(' ')[1])
         if(!token){
             return {status: 403, data:{message: "Token Expired"}}
@@ -112,6 +113,7 @@ class UserService {
         let userInfo = {
             _id: user._id,
             username: user.username,
+            role: user.role,
         }
 
         return {status: 200, data: userInfo}

@@ -1,25 +1,21 @@
 import axios from 'api/axios'
-import useAuth from './userAuth'
+import { useSession } from 'next-auth/react'
 
 function useRefreshToken() {
-    const { auth, setAuth } = useAuth()
+    const { data: session} = useSession()
     const refresh = async () => {
-        const response = await axios.post('/token', 
-        {
-          _id: auth._id,
-          accessToken: auth.accessToken
-        },
-        {
-        // withCredentials: true
-        })
-      setAuth(prev => {
-        return {
-          ...prev,
-          accessToken: response.data.accessToken
-        }
+      const response = await axios.post('/token', 
+      {
+        _id: session?.user._id,
+        accessToken: session?.user.accessToken
+      },
+      {
+      // withCredentials: true
       })
+      if(session){
+        session.user.accessToken = response.data.accessToken
+      }
       return response.data.accessToken
-    
     }
   return refresh
 }

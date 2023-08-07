@@ -50,7 +50,6 @@ export default function ToDoFormBlock() {
   }
   
   return (
-    
     <div className='row'>
     <ToDoFormModal show={show} handleClose={handleClose} />
     <ToDoTaskModal show={show2} handleClose={handleClose2} task={task.current}/>

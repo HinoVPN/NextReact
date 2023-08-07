@@ -6,6 +6,7 @@ const userSchema = new Schema({
     createdDate:{ type: Date, default: Date.now},
     lastUpdatedDate:{ type: Date, default: Date.now},
     status:{ type: String, default: 1, enum:[0,1,8]},
+    role:{ type: String, default: 'user', enum:['user','admin']}
 })
 
 userSchema.pre('find',function(next){
