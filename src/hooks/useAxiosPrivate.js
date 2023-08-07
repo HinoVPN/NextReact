@@ -4,8 +4,8 @@ import useRefreshToken from "./useRefreshToken";
 import useAuth from "./userAuth";
 
 const useAxiosPrivate = () => {
-    const refresh = useRefreshToken();
-    const { auth } = useAuth();
+  const refresh = useRefreshToken();
+  const { auth } = useAuth();
 
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
@@ -38,6 +38,7 @@ const useAxiosPrivate = () => {
       }
   },[auth, refresh])
       
+  return axiosPrivate;
 }
 
 

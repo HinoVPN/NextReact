@@ -1,3 +1,4 @@
+'use client'
 import Head from 'next/head'
 import './globals.css'
 import './page.module.css'
@@ -8,6 +9,7 @@ import { Inter } from 'next/font/google'
 import React from 'react'
 import Header from 'components/Header'
 import { AuthProvider } from 'context/AuthProvider'
+import { BrowserRouter } from 'react-router-dom'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,6 +20,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <BrowserRouter>
     <AuthProvider>
     <html lang="en">
       <Head>
@@ -30,5 +33,6 @@ export default function RootLayout({ children }) {
       </body>
     </html>
     </AuthProvider>
+    </BrowserRouter>
   )
 }

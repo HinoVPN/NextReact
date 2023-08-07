@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt")
 const User = require('../models/userModel')
-const Token = require('../models/tokenModel')
+const Token = require('../models/tokenModel');
+const tokenModel = require("../models/tokenModel");
 
 class UserService {
 
@@ -62,6 +63,15 @@ class UserService {
                 return {status: 401, data:{message: "Unauthorized"}}
             }
 
+            const currentToken = await tokenModel.findOne({userId: user._id})
+            if(currentToken){
+                return {status: 200, data:{
+                    _id: user._id,
+                    username: user.username,
+                    accessToken: currentToken.accessToken,
+                }}
+            }
+
             let userInfo = {
                 _id: user._id,
             }
@@ -87,15 +97,16 @@ class UserService {
     }
 
     async getUserProfile(req, res) {
-        const token = await this.auth.checkJwt(req.headers.authorization?.split(' ')[1])
-        if(!token){
-            return {message: "Token Expired"}
-        }
-        
+
         const user = await User.findOne({_id: req.body._id}).exec()
   
         if(!user){
-          return {message: "User not found"}
+          return {status: 401, data:{message: "User not found"}}
+        }
+
+        const token = await this.auth.checkJwt(req.headers.authorization?.split(' ')[1])
+        if(!token){
+            return {status: 403, data:{message: "Token Expired"}}
         }
 
         let userInfo = {
@@ -103,7 +114,7 @@ class UserService {
             username: user.username,
         }
 
-        return userInfo
+        return {status: 200, data: userInfo}
     }
 }    
 
