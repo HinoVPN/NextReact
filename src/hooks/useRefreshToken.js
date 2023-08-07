@@ -6,13 +6,16 @@ function useRefreshToken() {
     const refresh = async () => {
       const response = await axios.post('/token', 
       {
+        // @ts-ignore
         _id: session?.user._id,
+        // @ts-ignore
         accessToken: session?.user.accessToken
       },
       {
       // withCredentials: true
       })
       if(session){
+        // @ts-ignore
         session.user.accessToken = response.data.accessToken
       }
       return response.data.accessToken

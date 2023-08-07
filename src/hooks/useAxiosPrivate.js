@@ -11,6 +11,7 @@ const useAxiosPrivate = () => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
         (config) => {
           if (!config.headers["Authorization"]) {
+            // @ts-ignore
             config.headers["Authorization"] = `Bearer ${session?.user.accessToken}`;
           }
           return config;

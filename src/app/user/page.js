@@ -14,6 +14,7 @@ const router = useRouter()
 useEffect(() => {
     const users = async () =>{
         try{
+            // @ts-ignore
             const users = await axiosPrivate.post("/users/profile",{_id:session?.user._id})
             console.log(users)
         }catch(error){
