@@ -21,7 +21,6 @@ router.post('/login', async function(req, res, next) {
 
 router.post('/profile', async function(req, res, next) {
   const result = await UserController.getUserProfile(req, res)
-  console.log(result)
   res.status(result.status).json(result.data)
 });
 

@@ -8,12 +8,15 @@ function useRefreshToken() {
       {
         // @ts-ignore
         _id: session?.user._id,
-        // @ts-ignore
-        accessToken: session?.user.accessToken
       },
       {
       // withCredentials: true
+      headers: {
+        // @ts-ignore
+        Authorization: `Bearer ${session?.user.accessToken}`
+      }
       })
+
       if(session){
         // @ts-ignore
         session.user.accessToken = response.data.accessToken

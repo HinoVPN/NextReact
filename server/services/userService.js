@@ -37,9 +37,9 @@ class UserService {
         try{
             const hashPassword = this.encryptPassword(req.body.password)
             const user = new User({
-            username: req.body.username,
-            password: hashPassword
-        })
+                username: req.body.username,
+                password: hashPassword
+            })
             const newUser = await user.save()
             return newUser
         }catch(e){
@@ -78,7 +78,7 @@ class UserService {
             }
 
             let refreshToken = this.auth.signJwt(userInfo,{ expiresIn: '24h' })
-            let accessToken = this.auth.signJwt(userInfo,{ expiresIn: '1s' })
+            let accessToken = this.auth.signJwt(userInfo,{ expiresIn: '100s' })
             const token = new Token({
                 userId: user._id,
                 refreshToken: refreshToken,
@@ -105,6 +105,7 @@ class UserService {
         if(!user){
           return {status: 401, data:{message: "User not found"}}
         }
+
         const token = await this.auth.checkJwt(req.headers.authorization?.split(' ')[1])
         if(!token){
             return {status: 403, data:{message: "Token Expired"}}

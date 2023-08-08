@@ -9,7 +9,6 @@ function signJwt(object,options){
     const token = jwt.sign(JSON.parse(JSON.stringify(object)), SECRET, { ...options && options });
     return token;
 }
-
 function verifyJwt(token){
     try {
         const decoded = jwt.verify(token, SECRET)
@@ -36,12 +35,24 @@ async function reSignJwt(userId,token){
         let userInfo = {
             _id: userId,
         }
-        const newToken = signJwt(userInfo, {expiresIn: '10s'})
+        const newToken = signJwt(userInfo, {expiresIn: '10m'})
         accessToken.accessToken = newToken
         accessToken.save() 
         return {accessToken: newToken}
     }
     return {message: "Invalid User"}
+}
+
+async function checkUserAndToken(userId,token){
+    const user = await User.findOne({_id: userId}).exec()
+    if(!user){
+        return {status: 401, data:{message: "User not found"}}
+    }
+    const currentToken = await checkJwt(token)
+    if(!currentToken){
+        return {status: 403, data:{message: "Token Expired"}}
+    }
+    return null
 }
 
 
@@ -50,5 +61,6 @@ module.exports = {
     signJwt,
     verifyJwt,
     checkJwt,
-    reSignJwt
+    reSignJwt,
+    checkUserAndToken
 }
