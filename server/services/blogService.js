@@ -29,6 +29,7 @@ class BlogService{
     }
 
     async getUserBlog(req, res){ 
+        console.log(1)
         const inValid = await this.auth.checkUserAndToken(req.body.userId, req.headers.authorization?.split(' ')[1])
         if(inValid){
             return {status: 403, data: inValid}

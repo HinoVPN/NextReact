@@ -6,11 +6,9 @@ router.get('/', function(req, res, next) {
     res.json({message: "All Blog Shown"})
 });
 
-router.get('/userBlog', async function(req, res, next) {
-    console.log(1)
+router.post('/userBlog', async function(req, res, next) {
     const result = await BlogController.getUserBlog(req, res)
     res.status(result.status).json(result.data)
-
 });
 
 router.post('/create', async function(req, res, next) {
