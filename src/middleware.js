@@ -1,17 +1,15 @@
 import { NextResponse } from 'next/server'
-import{ withAuth }from 'next-auth/middleware'
+import { useCookies } from 'react-cookie'
  
-export default withAuth(
-  function middleware(req, res) {
-    if(req.nextUrl.pathname.startsWith('/user') && req.nextauth.token?.role =="user" || req.nextauth.token?.role =="admin") {
-      return NextResponse.next()
-    }else{
-      return NextResponse.rewrite(new URL("/login",req.url))
-    }
-  },
-  { callbacks: { authorized: ({ req, token }) => !!token } }
-)
- 
+export function middleware(req, res) {
+  const [cookies] = useCookies()
+  if(cookies.get('userId') && cookies.get('role') && cookies.get('accessToken') && cookies.get('username')) {
+    return NextResponse.next()
+  }else{
+    return NextResponse.rewrite(new URL("/login",req.url))
+  }
+}
+
 export const config = {
   matcher: '/user/:path*',
 }

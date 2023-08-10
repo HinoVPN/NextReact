@@ -1,14 +1,17 @@
 const jwt = require('jsonwebtoken');
 const Token = require('../models/tokenModel')
 const User = require('../models/userModel')
-const EXPIRES_IN = 10 * 1000; // 10 sec
+const EXPIRES_IN = 10*1000; // 10 sec
 const SECRET = 'test';
 
 
 function signJwt(object,options){
     const token = jwt.sign(JSON.parse(JSON.stringify(object)), SECRET, { ...options && options });
-    return token;
+    const currentDate = new Date();
+    const exp = new Date(currentDate.getTime() + 10000);
+    return {token, exp};
 }
+
 function verifyJwt(token){
     try {
         const decoded = jwt.verify(token, SECRET)
@@ -30,15 +33,15 @@ async function checkJwt(token){
 }
 
 async function reSignJwt(userId,token){
-    const accessToken = await Token.findOne({userId: userId, accessToken: token}).exec()
-    if(accessToken){
+    const accessToken = await Token.findOne({userId: userId}).exec()
+    if(accessToken){ 
         let userInfo = {
             _id: userId,
         }
-        const newToken = signJwt(userInfo, {expiresIn: '10m'})
-        accessToken.accessToken = newToken
+        const newTokenObj = signJwt(userInfo, {expiresIn: EXPIRES_IN})
+        accessToken.accessToken = newTokenObj.token
         accessToken.save() 
-        return {accessToken: newToken}
+        return {accessToken: newTokenObj.token, exp: newTokenObj.exp}
     }
     return {message: "Invalid User"}
 }

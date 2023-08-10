@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt")
 const User = require('../models/userModel')
 const Token = require('../models/tokenModel');
-const tokenModel = require("../models/tokenModel");
 
 class UserService {
 
@@ -63,12 +62,14 @@ class UserService {
                 return {status: 401, data:{message: "Unauthorized"}}
             }
 
-            const currentToken = await tokenModel.findOne({userId: user._id})
+            const currentToken = await Token.findOne({userId: user._id})
             if(currentToken){
+                const reNewTokenObj = await this.auth.reSignJwt(user._id,currentToken.accessToken)
                 return {status: 200, data:{
                     _id: user._id,
                     username: user.username,
-                    accessToken: currentToken.accessToken,
+                    accessToken: reNewTokenObj.accessToken,
+                    accessTokenExp: reNewTokenObj.exp,
                     role: user.role
                 }}
             }
@@ -76,20 +77,20 @@ class UserService {
             let userInfo = {
                 _id: user._id,
             }
-
-            let refreshToken = this.auth.signJwt(userInfo,{ expiresIn: '24h' })
-            let accessToken = this.auth.signJwt(userInfo,{ expiresIn: '100s' })
+            let refreshTokenObj = this.auth.signJwt(userInfo,{ expiresIn: '24h' })
+            let accessTokenObj = this.auth.signJwt(userInfo,{ expiresIn: '1s' })
             const token = new Token({
                 userId: user._id,
-                refreshToken: refreshToken,
-                accessToken: accessToken
+                refreshToken: refreshTokenObj.token,
+                accessToken: accessTokenObj.token
             })
             await token.save()
-
+            
             return {status: 200, data:{
                 _id: user._id,
                 username: user.username,
-                accessToken: accessToken,
+                accessToken: accessTokenObj.token,
+                accessTokenExp: accessTokenObj.exp,
                 role: user.role
             }}
             

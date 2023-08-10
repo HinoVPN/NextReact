@@ -1,28 +1,27 @@
 import axios from 'api/axios'
-import { useSession } from 'next-auth/react'
+import { useCookies } from 'react-cookie'
 
 function useRefreshToken() {
-    const { data: session} = useSession()
+  const [cookies, setCookie] = useCookies()
+  
     const refresh = async () => {
-      const response = await axios.post('/token', 
-      {
-        // @ts-ignore
-        _id: session?.user._id,
-      },
-      {
-      // withCredentials: true
-      headers: {
-        // @ts-ignore
-        Authorization: `Bearer ${session?.user.accessToken}`
-      }
-      })
+      if(cookies.get('accessToken')){
+        const response = await axios.post('/token', 
+        {
+          _id: cookies.get('userId'),
+          accessToken: cookies.get('accessToken')
+        },
+        {
+        // withCredentials: true
+        })
 
-      if(session){
-        // @ts-ignore
-        session.user.accessToken = response.data.accessToken
+        setCookie('accessToken', response.data.accessToken, {path:'/'})
+
+        return response.data.accessToken
       }
-      return response.data.accessToken
+      return null
     }
+
   return refresh
 }
 

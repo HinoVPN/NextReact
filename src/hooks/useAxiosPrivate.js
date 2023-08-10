@@ -1,18 +1,22 @@
 import { axiosPrivate } from "api/axios";
 import { useEffect } from "react";
 import useRefreshToken from "./useRefreshToken";
-import { useSession } from "next-auth/react";
+import { useCookies } from "react-cookie";
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
-  const { data: session } = useSession()
+  const [cookies] = useCookies()
 
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
-        (config) => {
+      
+        async (config) => {
+
           if (!config.headers["Authorization"]) {
             // @ts-ignore
-            config.headers["Authorization"] = `Bearer ${session?.user.accessToken}`;
+            config.headers["Authorization"] = `Bearer ${cookies.get('accessToken')}`;
+            // @ts-ignore
+            config.headers["_id"] = `${cookies.get('userId')}`;
           }
           return config;
         },
@@ -25,8 +29,8 @@ const useAxiosPrivate = () => {
           const prevRequest = error?.config;
           if (error?.response?.status === 403 && !prevRequest?.sent) {
             prevRequest.sent = true;
-            const newAccessToken = await refresh();
-            prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+            const newToken =await refresh();
+            prevRequest.headers["Authorization"] = `Bearer ${newToken}`;
             return axiosPrivate(prevRequest);
           }
           return Promise.reject(error);
@@ -37,7 +41,7 @@ const useAxiosPrivate = () => {
         axiosPrivate.interceptors.request.eject(requestIntercept);
         axiosPrivate.interceptors.response.eject(responseIntercept);
       }
-  },[session, refresh])
+  },[refresh])
       
   return axiosPrivate;
 }

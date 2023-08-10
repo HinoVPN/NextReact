@@ -5,12 +5,20 @@ class BlogController{
         this.blogService = new BlogService();
     }
 
-    async getUserBlog(req, res){
-        return await this.blogService.getUserBlog(req, res);
+    async getAllBlogs(req, res){
+        return await this.blogService.getAllBlogs(req, res);
+    }
+
+    async getUserBlogs(req, res){
+        return await this.blogService.getUserBlogs(req, res);
     }
 
     async createBlog(req, res){
         return await this.blogService.createBlog(req, res);
+    }
+
+    async getBlogById(req, res){
+        return await this.blogService.getBlogById(req, res);
     }
 
     

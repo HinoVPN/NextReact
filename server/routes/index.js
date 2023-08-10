@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/token', async function(req, res, next) {
-  const token = await auth.reSignJwt(req.body._id,req.headers.authorization.split(' ')[1])
+  const token = await auth.reSignJwt(req.body._id,req.body.accessToken)
   res.json(token)
 });
 

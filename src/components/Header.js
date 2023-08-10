@@ -1,12 +1,27 @@
 import 'bootstrap/dist/css/bootstrap.css'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 import { Button, Col, Container, Nav, Navbar } from 'react-bootstrap';
-import { signIn, signOut, useSession } from 'next-auth/react';
-
+import { useRouter } from 'next/navigation';
+import { useCookies } from 'react-cookie';
+import useAuth from 'hooks/useAuth';
 
 export default function Header() {
-  const {data: session} = useSession();
+  const router = useRouter();
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const { auth, setAuth } = useAuth()
+  useEffect(() => {setAuth(cookies)},[auth])
+
+  const logout = () =>{
+    console.log(123)
+    removeCookie("userId")
+    removeCookie("username")
+    removeCookie("accessToken")
+    removeCookie("role")
+    setAuth(null)
+    router.push("/login")
+  }
+
   return (<>
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" fixed="top">
     <Container>
@@ -19,11 +34,13 @@ export default function Header() {
           <Navbar.Text><Link className="ms-2 text-decoration-none text-secondary"  href="/todo">To-Do List</Link></Navbar.Text>
           <Navbar.Text><Link className="ms-2 text-decoration-none text-secondary"  href="/user">Profile</Link></Navbar.Text>
         </Nav>
-        {session?.user ?
-          <Button size="sm" onClick={() => signOut()}>{session.user.name} Sign Out</Button>
-          :
-          <Button size="sm" onClick={() => signIn()}>Sign Up / Sign In</Button>
+        {auth.username?
+          <Button size="sm" onClick={() => logout()}>{auth.username}</Button>
+          :  
+          <Button size="sm" onClick={() => router.push("/login")}>Sign Up / Sign In</Button>
         }
+          
+          
         
       </Navbar.Collapse>
     </Container>
