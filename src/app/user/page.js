@@ -4,16 +4,19 @@ import 'bootstrap/dist/css/bootstrap.css'
 import useAxiosPrivate from 'hooks/useAxiosPrivate'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { useCookies } from 'react-cookie'
 
 export default function Header() {
 const axiosPrivate = useAxiosPrivate()
 const router = useRouter()
+const [cookies] = useCookies()
 
 useEffect(() => {
     const users = async () =>{
         try{
             // @ts-ignore
-            const users = await axiosPrivate.post("/users/profile",{_id:session?.user._id})
+            const users = await axiosPrivate.post("/users/profile",{_id:cookies.userId})
+            console.log(users)
         }catch(error){
             if(!error?.response){
                 console.log(error.response)
@@ -26,7 +29,7 @@ useEffect(() => {
     }
 
     users()
-},[status])
+},[])
 
   return (<>
     User Page<br></br>

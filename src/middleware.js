@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server'
-import { useCookies } from 'react-cookie'
  
-export function middleware(req, res) {
-  const [cookies] = useCookies()
-  if(cookies.get('userId') && cookies.get('role') && cookies.get('accessToken') && cookies.get('username')) {
+export function middleware(req, res) {  
+  if(req.cookies.has('accessToken') && req.cookies.has('userId') && req.cookies.has('role') && req.cookies.has('username')) {
     return NextResponse.next()
   }else{
     return NextResponse.rewrite(new URL("/login",req.url))
@@ -11,5 +9,5 @@ export function middleware(req, res) {
 }
 
 export const config = {
-  matcher: '/user/:path*',
+  matcher: ['/user/:path*','/blog/:path*',],
 }

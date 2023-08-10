@@ -33,8 +33,9 @@ export default function Header() {
           <Navbar.Text><Link className="ms-2 text-decoration-none text-secondary"  href="/weather">Weather</Link></Navbar.Text>
           <Navbar.Text><Link className="ms-2 text-decoration-none text-secondary"  href="/todo">To-Do List</Link></Navbar.Text>
           <Navbar.Text><Link className="ms-2 text-decoration-none text-secondary"  href="/user">Profile</Link></Navbar.Text>
+          <Navbar.Text><Link className="ms-2 text-decoration-none text-secondary"  href="/blog">Blog</Link></Navbar.Text>
         </Nav>
-        {auth.username?
+        {auth?.username?
           <Button size="sm" onClick={() => logout()}>{auth.username}</Button>
           :  
           <Button size="sm" onClick={() => router.push("/login")}>Sign Up / Sign In</Button>

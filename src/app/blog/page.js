@@ -3,19 +3,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { Badge, Button, Card, Col, Row, Stack } from "react-bootstrap";
 import { Suspense } from 'react';
 import BlogLoading from "./loading";
-import { useSession } from "next-auth/react";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { format } from 'date-fns'
 import Link from "next/link";
 
 export default function Blog() {
-  const { data: session, status, update } = useSession();
   const axiosPrivate = useAxiosPrivate()
   const [blogs,setBlogs] = useState([])
 
   useEffect(()=>{
-    if(status === "loading") return
-    if(status === "unauthenticated") return
     async function getUserBlogs(){
       const res = await axiosPrivate.get('/blogs')
       console.log(res.data)
@@ -23,7 +19,7 @@ export default function Blog() {
     }
 
     getUserBlogs()
-  },[status])
+  },[])
 
   return (
     

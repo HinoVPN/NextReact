@@ -11,12 +11,11 @@ const useAxiosPrivate = () => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       
         async (config) => {
-
           if (!config.headers["Authorization"]) {
             // @ts-ignore
-            config.headers["Authorization"] = `Bearer ${cookies.get('accessToken')}`;
+            config.headers["Authorization"] = `Bearer ${cookies.accessToken}`;
             // @ts-ignore
-            config.headers["_id"] = `${cookies.get('userId')}`;
+            config.headers["_id"] = `${cookies.userId}`;
           }
           return config;
         },

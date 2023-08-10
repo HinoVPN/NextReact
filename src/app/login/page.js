@@ -7,6 +7,8 @@ import * as yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { useCookies } from "react-cookie";
 import useAuth from "hooks/useAuth";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const LOGIN_URL = "users/login";
 
 
@@ -22,23 +24,63 @@ export default function login() {
     // .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/, 'Contains at least one uppercase letter and at least one lowercase letter and at least one special character (non-alphanumeric)'),
   });
 
-  const login = async (values) => {
+  const toastId = React.useRef(null);
+  
+
+  const notifySuccess = () => {
+    toastId.current = toast.success('Success', {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
+
+  const notifyFail = () => {
+    toastId.current = toast.error('Incorrect Username/ Password', {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
+  }
+  
+
+  const login = async (values,resetForm) => {
     const {username, password} = values
-    const res = await axios.post(LOGIN_URL, 
-      JSON.stringify({username, password}),
-      {
-      headers: { "Content-Type": "application/json"},
-    })
-    if (res.status === 200) {
-      setCookie("userId", res.data._id, {path: '/'})
-      setCookie("accessToken", res.data.accessToken, {path: '/'})
-      setCookie("role", res.data.role, {path: '/'})
-      setCookie("username", res.data.username, {path: '/'})
-      if(cookies){
-        setAuth(cookies)
+
+    try {
+      const res = await axios.post(LOGIN_URL, 
+        JSON.stringify({username, password}),
+        {
+        headers: { "Content-Type": "application/json"},
+      })
+
+      if (res.status === 200) {
+        setCookie("userId", res.data._id, {path: '/'})
+        setCookie("accessToken", res.data.accessToken, {path: '/'})
+        setCookie("role", res.data.role, {path: '/'})
+        setCookie("username", res.data.username, {path: '/'})
+        if(cookies){
+          setAuth(cookies)
+        }
+  
+        notifySuccess()
+        setTimeout(() => {router.push('/')},1000)
+        
+        return res.data
       }
-      router.push('/')
-      return res.data
+    }catch(error){
+      notifyFail()
+      resetForm()
     }
     return null
   }
@@ -49,13 +91,25 @@ export default function login() {
   return (
     <main style={{marginLeft: 'unset'}}id="main" className="main">
     <section className="section dashboard">
+    <ToastContainer
+      position="top-center"
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="light"
+    />
     <Stack className="col-md-5 mx-auto">
     <Card>
     <Card.Body>
       <Card.Title>Login</Card.Title>
       <Formik
         validationSchema={loginSchema}
-        onSubmit={(values)=>login(values)}
+        onSubmit={(values,{resetForm})=>login(values,resetForm)}
         initialValues={{
           username: 'test',
           password: 'test',

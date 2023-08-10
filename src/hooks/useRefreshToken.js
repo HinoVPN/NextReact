@@ -5,11 +5,11 @@ function useRefreshToken() {
   const [cookies, setCookie] = useCookies()
   
     const refresh = async () => {
-      if(cookies.get('accessToken')){
+      if(cookies.accessToken){
         const response = await axios.post('/token', 
         {
-          _id: cookies.get('userId'),
-          accessToken: cookies.get('accessToken')
+          _id: cookies.userId,
+          accessToken: cookies.accessToken
         },
         {
         // withCredentials: true
