@@ -16,6 +16,7 @@ export default function login() {
   const { Formik } = formik;
   const router = useRouter();
   const [cookies, setCookie] = useCookies();
+  // @ts-ignore
   const { auth, setAuth } = useAuth()
   const loginSchema = yup.object().shape({
     username: yup.string().required('Username is required'),

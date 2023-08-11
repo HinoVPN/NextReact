@@ -26,7 +26,7 @@ export default function Blog() {
     <main style={{marginLeft: 'unset'}} id="main" className="main">
       <section className="section dashboard">
       <Suspense fallback={<BlogLoading/>}>
-      <Row xs={1} md={2} lg={3} xl={4} className="g-4">
+      <Row xs={1} md={2} lg={3} xl={4} xxl={5} className="g-4">
         {blogs && blogs.map((blog, idx) => (
           <Col key={idx}>
             <Card style={{ width: '18rem' }} className="mx-auto">
